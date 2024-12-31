@@ -1,0 +1,110 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    height: 90vh;
+}
+
+.editor-panel, .preview-panel {
+    flex: 1;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#mermaidCode {
+    width: 100%;
+    height: calc(100% - 50px);
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: monospace;
+    resize: none;
+}
+
+#mermaidOutput {
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow: auto;
+}
+
+.bottom-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.theme-buttons {
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.theme-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+.theme-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.theme-btn.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.download-btn {
+    padding: 8px 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #28a745;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+}
+
+.preview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.preview-header h2 {
+    margin-bottom: 0;
+}
+
+.theme-buttons {
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+} 

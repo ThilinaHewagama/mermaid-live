@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Live Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Include Mermaid JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="editor-panel">
+            <h2>Mermaid Code</h2>
+            <textarea id="mermaidCode" placeholder="Enter your mermaid code here...">flowchart TD
+    A[Start] --> B{Decision?}
+    B -- Yes --> C[Proceed]
+    B -- No --> D[Stop]
+    C --> E[Finish]</textarea>
+        </div>
+        <div class="preview-panel">
+            <h2>Preview</h2>
+            <div class="theme-buttons">
+                <button class="theme-btn" data-theme="default">Default</button>
+                <button class="theme-btn" data-theme="dark">Dark</button>
+                    <button class="theme-btn" data-theme="forest">Forest</button>
+                    <button class="theme-btn" data-theme="neutral">Neutral</button>
+                    <button class="theme-btn" data-theme="base">Base</button>
+                    <button class="theme-btn" data-theme="night">Night</button>
+            </div>
+            <div id="mermaidOutput"></div>
+            <div class="bottom-container">
+                <button id="downloadBtn" class="download-btn">Download</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
