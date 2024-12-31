@@ -94,4 +94,18 @@ function downloadDiagram() {
 }
 
 // Add event listener for download button
-downloadBtn.addEventListener('click', downloadDiagram); 
+downloadBtn.addEventListener('click', downloadDiagram);
+
+// Fullscreen functionality
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const previewPanel = document.querySelector('.preview-panel');
+
+fullscreenBtn.addEventListener('click', () => {
+    previewPanel.classList.toggle('fullscreen');
+    const isFullscreen = previewPanel.classList.contains('fullscreen');
+    fullscreenBtn.innerHTML = isFullscreen ? 
+        '<i class="fas fa-compress"></i> Exit Fullscreen' : 
+        '<i class="fas fa-expand"></i> Fullscreen';
+    // Trigger a re-render of the diagram to adjust to new size
+    updatePreview();
+}); 
