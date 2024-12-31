@@ -24,7 +24,9 @@ function updateDiagram() {
     outputDiv.appendChild(mermaidDiv);
     
     // Render the diagram
-    mermaid.init(undefined, '.mermaid');
+    mermaid.init(undefined, '.mermaid').then(() => {
+        initZoomPan();
+    });
 }
 
 // Function to change theme
@@ -108,4 +110,94 @@ fullscreenBtn.addEventListener('click', () => {
         '<i class="fas fa-expand"></i> Fullscreen';
     // Trigger a re-render of the diagram to adjust to new size
     updatePreview();
-}); 
+});
+
+// Zoom and Pan functionality
+let currentScale = 1;
+let isDragging = false;
+let startX, startY, translateX = 0, translateY = 0;
+
+function updateTransform(svgElement) {
+    if (!svgElement) return;
+    svgElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+}
+
+function initZoomPan() {
+    const svgElement = document.querySelector('#mermaidOutput svg');
+    if (!svgElement) return;
+
+    // Reset transform
+    currentScale = 1;
+    translateX = 0;
+    translateY = 0;
+    updateTransform(svgElement);
+
+    // Pan functionality
+    svgElement.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        svgElement.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        translateX = e.clientX - startX;
+        translateY = e.clientY - startY;
+        updateTransform(svgElement);
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        if (svgElement) {
+            svgElement.style.cursor = 'grab';
+        }
+    });
+
+    // Zoom buttons functionality
+    document.getElementById('zoomInBtn').addEventListener('click', () => {
+        currentScale = Math.min(currentScale * 1.2, 5);
+        updateTransform(svgElement);
+    });
+
+    document.getElementById('zoomOutBtn').addEventListener('click', () => {
+        currentScale = Math.max(currentScale / 1.2, 0.2);
+        updateTransform(svgElement);
+    });
+
+    document.getElementById('resetZoomBtn').addEventListener('click', () => {
+        currentScale = 1;
+        translateX = 0;
+        translateY = 0;
+        updateTransform(svgElement);
+    });
+
+    // Mouse wheel zoom
+    svgElement.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 0.9 : 1.1;
+        const newScale = currentScale * delta;
+        
+        if (newScale >= 0.2 && newScale <= 5) {
+            // Get the SVG container's bounding box
+            const rect = svgElement.getBoundingClientRect();
+            
+            // Calculate the position of the cursor relative to the SVG's center
+            const svgCenterX = rect.left + rect.width / 2;
+            const svgCenterY = rect.top + rect.height / 2;
+            
+            // Calculate the cursor's distance from the center
+            const distanceX = e.clientX - svgCenterX;
+            const distanceY = e.clientY - svgCenterY;
+            
+            // Calculate the new position maintaining the cursor's relative position
+            const scaleFactor = 1 - delta;
+            translateX += distanceX * scaleFactor;
+            translateY += distanceY * scaleFactor;
+            
+            currentScale = newScale;
+            updateTransform(svgElement);
+        }
+    });
+} 
