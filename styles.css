@@ -17,7 +17,15 @@ body {
     height: 90vh;
 }
 
-.editor-panel, .preview-panel {
+.editor-panel {
+    flex: 0 0 40%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.preview-panel {
     flex: 1;
     background-color: white;
     padding: 20px;
@@ -191,4 +199,153 @@ h2 {
 
 .preview-panel.fullscreen #mermaidOutput {
     height: calc(100vh - 150px);
+}
+
+/* Tab Styles */
+.tab-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tab-bar {
+    display: flex;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 5px 0;
+    gap: 2px;
+}
+
+.tab {
+    background: #e4e4e4;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    padding: 8px 15px;
+    border-radius: 4px 4px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+.tab.active {
+    background: white;
+    border-bottom: 1px solid white;
+    margin-bottom: -1px;
+}
+
+.tab span {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.close-tab {
+    background: none;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-tab:hover {
+    color: #ff4444;
+}
+
+.add-tab {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-tab:hover {
+    color: #333;
+}
+
+.tab-content {
+    flex: 1;
+    overflow: hidden;
+}
+
+.tab-pane {
+    display: none;
+    height: 100%;
+}
+
+.tab-pane.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Adjust existing styles */
+.editor-panel, .preview-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.mermaid-code {
+    width: 100%;
+    height: 100%;
+    min-height: 200px;
+    resize: none;
+    padding: 10px;
+    font-family: monospace;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.mermaid-output {
+    flex: 1;
+    overflow: auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Fullscreen styles */
+.mermaid-output:fullscreen {
+    background-color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-output:fullscreen svg {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+/* Add a fullscreen exit button */
+.mermaid-output:fullscreen::after {
+    content: "Press ESC to exit fullscreen";
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+}
+
+/* Dark theme support */
+@media (prefers-color-scheme: dark) {
+    .mermaid-output:fullscreen {
+        background-color: white; /* Keep background white even in dark mode */
+    }
 } 

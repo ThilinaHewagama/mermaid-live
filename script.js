@@ -1,203 +1,220 @@
 // Initialize mermaid
-mermaid.initialize({ 
+mermaid.initialize({
     startOnLoad: true,
     theme: 'default'
 });
 
-// Get elements
-const codeInput = document.getElementById('mermaidCode');
-const outputDiv = document.getElementById('mermaidOutput');
-const themeButtons = document.querySelectorAll('.theme-btn');
-const downloadBtn = document.getElementById('downloadBtn');
+let tabCounter = 1;
+const defaultDiagram = `flowchart TD
+    A[Start] --> B{Decision?}
+    B -- Yes --> C[Proceed]
+    B -- No --> D[Stop]
+    C --> E[Finish]`;
 
-// Function to update the diagram
-function updateDiagram() {
-    // Clear the output div
-    outputDiv.innerHTML = '';
+// Tab Management
+function createNewTab() {
+    tabCounter++;
     
-    // Create a new div for mermaid
-    const mermaidDiv = document.createElement('div');
-    mermaidDiv.className = 'mermaid';
-    mermaidDiv.textContent = codeInput.value;
+    // Create editor tab
+    const editorTab = document.createElement('div');
+    editorTab.className = 'tab';
+    editorTab.dataset.tab = tabCounter;
+    editorTab.innerHTML = `
+        <span>Tab ${tabCounter}</span>
+        <button class="close-tab"><i class="fas fa-times"></i></button>
+    `;
     
-    // Add the div to output
-    outputDiv.appendChild(mermaidDiv);
+    const addTabBtn = document.getElementById('addEditorTab');
+    addTabBtn.parentNode.insertBefore(editorTab, addTabBtn);
+
+    // Create editor content
+    const editorContent = document.createElement('div');
+    editorContent.className = 'tab-pane';
+    editorContent.dataset.tab = tabCounter;
+    editorContent.innerHTML = `
+        <h2>Mermaid Code</h2>
+        <textarea class="mermaid-code" placeholder="Enter your mermaid code here...">${defaultDiagram}</textarea>
+    `;
+    document.getElementById('editorTabContent').appendChild(editorContent);
+
+    // Create preview tab
+    const previewTab = document.createElement('div');
+    previewTab.className = 'tab';
+    previewTab.dataset.tab = tabCounter;
+    previewTab.innerHTML = `<span>Preview ${tabCounter}</span>`;
+    document.getElementById('previewTabBar').appendChild(previewTab);
+
+    // Create preview content
+    const previewContent = document.createElement('div');
+    previewContent.className = 'tab-pane';
+    previewContent.dataset.tab = tabCounter;
+    previewContent.innerHTML = `
+        <h2>Preview</h2>
+        <div class="theme-buttons">
+            <button class="theme-btn" data-theme="default">Default</button>
+            <button class="theme-btn" data-theme="dark">Dark</button>
+            <button class="theme-btn" data-theme="forest">Forest</button>
+            <button class="theme-btn" data-theme="neutral">Neutral</button>
+            <button class="theme-btn" data-theme="base">Base</button>
+            <button class="theme-btn" data-theme="night">Night</button>
+        </div>
+        <div class="mermaid-output"></div>
+        <div class="bottom-container">
+            <div class="zoom-controls">
+                <button class="zoom-btn zoom-in" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                <button class="zoom-btn zoom-out" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                <button class="zoom-btn reset-zoom" title="Reset Zoom"><i class="fas fa-sync-alt"></i></button>
+            </div>
+            <div class="right-controls">
+                <button class="fullscreen-btn"><i class="fas fa-expand"></i> Fullscreen</button>
+                <button class="download-btn"><i class="fas fa-download"></i> Download</button>
+            </div>
+        </div>
+    `;
+    document.getElementById('previewTabContent').appendChild(previewContent);
+
+    // Activate the new tab
+    activateTab(tabCounter);
     
-    // Render the diagram
-    mermaid.init(undefined, '.mermaid').then(() => {
-        initZoomPan();
-    });
+    // Initialize the new preview
+    updatePreview(editorContent.querySelector('.mermaid-code'));
 }
 
-// Function to change theme
-function changeTheme(themeName) {
-    // Update mermaid configuration
-    mermaid.initialize({ 
-        startOnLoad: true,
-        theme: themeName
-    });
-    
-    // Update active button state
-    themeButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.theme === themeName);
-    });
-    
-    // Re-render the diagram
-    updateDiagram();
+function activateTab(tabId) {
+    // Deactivate all tabs
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+    // Activate selected tabs
+    document.querySelectorAll(`.tab[data-tab="${tabId}"]`).forEach(tab => tab.classList.add('active'));
+    document.querySelectorAll(`.tab-pane[data-tab="${tabId}"]`).forEach(pane => pane.classList.add('active'));
 }
 
-// Add event listener for input changes
-codeInput.addEventListener('input', updateDiagram);
+function closeTab(tabId) {
+    // Only prevent closing if it's the last remaining tab
+    if (document.querySelectorAll('.editor-panel .tab:not(.add-tab)').length <= 1) return;
 
-// Add event listeners for theme buttons
-themeButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        changeTheme(button.dataset.theme);
-    });
-});
-
-// Set default theme button as active
-document.querySelector('[data-theme="default"]').classList.add('active');
-
-// Initial render
-updateDiagram();
-
-// Add this new function for downloading
-function downloadDiagram() {
-    // Find the SVG element
-    const svgElement = document.querySelector('#mermaidOutput svg');
+    document.querySelectorAll(`[data-tab="${tabId}"]`).forEach(el => el.remove());
     
-    if (!svgElement) {
-        alert('No diagram to download!');
-        return;
+    // Activate the previous tab
+    const remainingTabs = document.querySelectorAll('.editor-panel .tab:not(.add-tab)');
+    if (remainingTabs.length > 0) {
+        const lastTab = remainingTabs[remainingTabs.length - 1];
+        activateTab(lastTab.dataset.tab);
     }
-
-    // Create a clone of the SVG element
-    const svgClone = svgElement.cloneNode(true);
-    
-    // Get the SVG source
-    const svgData = new XMLSerializer().serializeToString(svgClone);
-    
-    // Create a Blob from the SVG data
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
-    
-    // Create a download link
-    const downloadLink = document.createElement('a');
-    downloadLink.download = 'mermaid-diagram.svg';
-    downloadLink.href = URL.createObjectURL(svgBlob);
-    
-    // Trigger the download
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-    
-    // Clean up the URL object
-    URL.revokeObjectURL(downloadLink.href);
 }
 
-// Add event listener for download button
-downloadBtn.addEventListener('click', downloadDiagram);
-
-// Fullscreen functionality
-const fullscreenBtn = document.getElementById('fullscreenBtn');
-const previewPanel = document.querySelector('.preview-panel');
-
-fullscreenBtn.addEventListener('click', () => {
-    previewPanel.classList.toggle('fullscreen');
-    const isFullscreen = previewPanel.classList.contains('fullscreen');
-    fullscreenBtn.innerHTML = isFullscreen ? 
-        '<i class="fas fa-compress"></i> Exit Fullscreen' : 
-        '<i class="fas fa-expand"></i> Fullscreen';
-    // Trigger a re-render of the diagram to adjust to new size
-    updatePreview();
-});
-
-// Zoom and Pan functionality
-let currentScale = 1;
-let isDragging = false;
-let startX, startY, translateX = 0, translateY = 0;
-
-function updateTransform(svgElement) {
-    if (!svgElement) return;
-    svgElement.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentScale})`;
+// Live Preview
+function updatePreview(textarea) {
+    const tabId = textarea.closest('.tab-pane').dataset.tab;
+    const previewDiv = document.querySelector(`.preview-panel .tab-pane[data-tab="${tabId}"] .mermaid-output`);
+    
+    try {
+        // Create a div with class mermaid and set the content
+        previewDiv.innerHTML = `<div class="mermaid">${textarea.value}</div>`;
+        // Initialize mermaid
+        mermaid.init(undefined, previewDiv.querySelector('.mermaid'));
+    } catch (error) {
+        previewDiv.innerHTML = `<div class="error">Syntax Error: ${error.message}</div>`;
+    }
 }
 
-function initZoomPan() {
-    const svgElement = document.querySelector('#mermaidOutput svg');
-    if (!svgElement) return;
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Add tab button
+    document.getElementById('addEditorTab').addEventListener('click', createNewTab);
 
-    // Reset transform
-    currentScale = 1;
-    translateX = 0;
-    translateY = 0;
-    updateTransform(svgElement);
+    // Tab selection and closing
+    document.addEventListener('click', function(e) {
+        // Tab selection
+        if (e.target.closest('.tab:not(.add-tab)')) {
+            const tab = e.target.closest('.tab');
+            activateTab(tab.dataset.tab);
+        }
 
-    // Pan functionality
-    svgElement.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX - translateX;
-        startY = e.clientY - translateY;
-        svgElement.style.cursor = 'grabbing';
-    });
+        // Close tab
+        if (e.target.closest('.close-tab')) {
+            e.stopPropagation();
+            const tab = e.target.closest('.tab');
+            closeTab(tab.dataset.tab);
+        }
 
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault();
-        translateX = e.clientX - startX;
-        translateY = e.clientY - startY;
-        updateTransform(svgElement);
-    });
+        // Theme switching
+        if (e.target.classList.contains('theme-btn')) {
+            const theme = e.target.dataset.theme;
+            const tabId = e.target.closest('.tab-pane').dataset.tab;
+            const textarea = document.querySelector(`.editor-panel .tab-pane[data-tab="${tabId}"] .mermaid-code`);
+            
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: theme
+            });
+            
+            updatePreview(textarea);
+        }
 
-    document.addEventListener('mouseup', () => {
-        isDragging = false;
-        if (svgElement) {
-            svgElement.style.cursor = 'grab';
+        // Zoom controls
+        if (e.target.closest('.zoom-btn')) {
+            const btn = e.target.closest('.zoom-btn');
+            const tabId = btn.closest('.tab-pane').dataset.tab;
+            const preview = document.querySelector(`.preview-panel .tab-pane[data-tab="${tabId}"] .mermaid-output`);
+            const svg = preview.querySelector('svg');
+            
+            if (!svg) return;
+            
+            const currentScale = svg.style.transform ? parseFloat(svg.style.transform.replace('scale(', '')) : 1;
+            
+            if (btn.classList.contains('zoom-in')) {
+                svg.style.transform = `scale(${currentScale * 1.2})`;
+            } else if (btn.classList.contains('zoom-out')) {
+                svg.style.transform = `scale(${currentScale / 1.2})`;
+            } else if (btn.classList.contains('reset-zoom')) {
+                svg.style.transform = 'scale(1)';
+            }
+        }
+
+        // Fullscreen toggle
+        if (e.target.closest('.fullscreen-btn')) {
+            const tabId = e.target.closest('.tab-pane').dataset.tab;
+            const preview = document.querySelector(`.preview-panel .tab-pane[data-tab="${tabId}"] .mermaid-output`);
+            
+            if (!document.fullscreenElement) {
+                preview.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Download functionality
+        if (e.target.closest('.download-btn')) {
+            const tabId = e.target.closest('.tab-pane').dataset.tab;
+            const preview = document.querySelector(`.preview-panel .tab-pane[data-tab="${tabId}"] .mermaid-output`);
+            const svg = preview.querySelector('svg');
+            
+            if (!svg) return;
+            
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            const url = URL.createObjectURL(svgBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `mermaid-diagram-${tabId}.svg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
     });
 
-    // Zoom buttons functionality
-    document.getElementById('zoomInBtn').addEventListener('click', () => {
-        currentScale = Math.min(currentScale * 1.2, 5);
-        updateTransform(svgElement);
-    });
-
-    document.getElementById('zoomOutBtn').addEventListener('click', () => {
-        currentScale = Math.max(currentScale / 1.2, 0.2);
-        updateTransform(svgElement);
-    });
-
-    document.getElementById('resetZoomBtn').addEventListener('click', () => {
-        currentScale = 1;
-        translateX = 0;
-        translateY = 0;
-        updateTransform(svgElement);
-    });
-
-    // Mouse wheel zoom
-    svgElement.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? 0.9 : 1.1;
-        const newScale = currentScale * delta;
-        
-        if (newScale >= 0.2 && newScale <= 5) {
-            // Get the SVG container's bounding box
-            const rect = svgElement.getBoundingClientRect();
-            
-            // Calculate the position of the cursor relative to the SVG's center
-            const svgCenterX = rect.left + rect.width / 2;
-            const svgCenterY = rect.top + rect.height / 2;
-            
-            // Calculate the cursor's distance from the center
-            const distanceX = e.clientX - svgCenterX;
-            const distanceY = e.clientY - svgCenterY;
-            
-            // Calculate the new position maintaining the cursor's relative position
-            const scaleFactor = 1 - delta;
-            translateX += distanceX * scaleFactor;
-            translateY += distanceY * scaleFactor;
-            
-            currentScale = newScale;
-            updateTransform(svgElement);
+    // Monitor changes in all textareas
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('mermaid-code')) {
+            updatePreview(e.target);
         }
     });
-} 
+
+    // Initialize the first preview
+    const firstTextarea = document.querySelector('.mermaid-code');
+    updatePreview(firstTextarea);
+}); 
