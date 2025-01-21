@@ -29,10 +29,19 @@
                         <textarea class="mermaid-code" placeholder="Enter your mermaid code here...">%% You can type the comments here
     
 flowchart TD
-    A[Start] --> B{Decision?}
-    B -- Yes --> C[Proceed]
-    B -- No --> D[Stop]
-    C --> E[Finish]</textarea>
+    A[Start]
+    B{Decision?}
+    C[Proceed]
+    D[Stop]
+    E[Finish]
+    
+    A --> B
+    B --> |Yes| C
+    B --> |No| D
+    C --> E
+
+
+</textarea>
                     </div>
                 </div>
             </div>
