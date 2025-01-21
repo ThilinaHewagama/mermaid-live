@@ -5,11 +5,79 @@ mermaid.initialize({
 });
 
 let tabCounter = 1;
-const defaultDiagram = `flowchart TD
+
+// Sample diagrams for different types
+const sampleDiagrams = [
+    // Flowchart
+    `flowchart TD
     A[Start] --> B{Decision?}
     B -- Yes --> C[Proceed]
     B -- No --> D[Stop]
-    C --> E[Finish]`;
+    C --> E[Finish]`,
+    
+    // Sequence diagram
+    `sequenceDiagram
+    Alice->>John: Hello John, how are you?
+    John-->>Alice: Great!
+    Alice->>John: See you later!`,
+    
+    // Class diagram
+    `classDiagram
+    class Animal {
+        +name: string
+        +makeSound(): void
+    }
+    class Dog {
+        +bark(): void
+    }
+    Animal <|-- Dog`,
+    
+    // User Journey
+    `journey
+    title My Day
+    section Morning
+        Wake up: 5: Me
+        Breakfast: 3: Me
+    section Afternoon
+        Work: 4: Me, Cat`,
+        
+    // Mindmap
+    `mindmap
+    root((Project))
+        Features
+            Auth
+            Dashboard
+            Reports
+        Tasks
+            Planning
+            Development
+            Testing`,
+            
+    // Git graph
+    `gitGraph
+       commit
+       commit
+       branch develop
+       checkout develop
+       commit
+       commit
+       checkout main
+       merge develop`,
+       
+    // State diagram
+    `stateDiagram-v2
+    [*] --> Still
+    Still --> Moving
+    Moving --> Still
+    Moving --> Crash
+    Crash --> [*]`
+];
+
+// Function to get a random diagram
+function getRandomDiagram() {
+    const randomIndex = Math.floor(Math.random() * sampleDiagrams.length);
+    return sampleDiagrams[randomIndex];
+}
 
 // Tab Management
 function createNewTab() {
@@ -27,13 +95,13 @@ function createNewTab() {
     const addTabBtn = document.getElementById('addEditorTab');
     addTabBtn.parentNode.insertBefore(editorTab, addTabBtn);
 
-    // Create editor content
+    // Create editor content with random diagram
     const editorContent = document.createElement('div');
     editorContent.className = 'tab-pane';
     editorContent.dataset.tab = tabCounter;
     editorContent.innerHTML = `
         <h2>Mermaid Code</h2>
-        <textarea class="mermaid-code" placeholder="Enter your mermaid code here...">${defaultDiagram}</textarea>
+        <textarea class="mermaid-code" placeholder="Enter your mermaid code here...">${getRandomDiagram()}</textarea>
     `;
     document.getElementById('editorTabContent').appendChild(editorContent);
 
