@@ -1,3 +1,25 @@
+:root {
+    --bg-color: #737373;
+    --panel-bg: #bbbbbb;
+    --text-color: #333;
+    --border-color: #ddd;
+    --control-bg: #f0f0f0;
+    --control-hover-bg: #e0e0e0;
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --success-color: #28a745;
+    --success-hover: #218838;
+    --neutral-color: #95969b;
+    --neutral-hover: #5f5f61;
+    --tab-bg: #e4e4e4;
+    --tab-text: #666;
+    --danger-color: #ff4444;
+    --white: white;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --fullscreen-text-bg: rgba(0, 0, 0, 0.7);
+    --color-whitesmoke: whitesmoke;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +30,7 @@ body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
     padding: 20px;
-    background-color: #737373;
+    background-color: var(--bg-color);
 }
 
 .container {
@@ -19,33 +41,34 @@ body {
 
 .editor-panel {
     flex: 0 0 40%;
-    background-color: #dadada;
+    background-color: var(--panel-bg);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .preview-panel {
     flex: 1;
-    background-color: #dadada;
+    background-color: var(--panel-bg);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 h2 {
     margin-bottom: 15px;
-    color: #333;
+    color: var(--text-color);
 }
 
 #mermaidCode {
     width: 100%;
     height: calc(100% - 50px);
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-family: monospace;
     resize: none;
+    background: var(--color-whitesmoke);
 }
 
 #mermaidOutput {
@@ -82,13 +105,13 @@ h2 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: var(--control-bg);
+    color: var(--text-color);
     transition: background-color 0.3s;
 }
 
 .zoom-btn:hover {
-    background-color: #e0e0e0;
+    background-color: var(--control-hover-bg);
 }
 
 .right-controls {
@@ -108,17 +131,17 @@ h2 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    background-color: #f0f0f0;
+    background-color: var(--control-bg);
     transition: background-color 0.3s;
 }
 
 .theme-btn:hover {
-    background-color: #e0e0e0;
+    background-color: var(--control-hover-bg);
 }
 
 .theme-btn.active {
-    background-color: #007bff;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
 }
 
 .download-btn, .fullscreen-btn {
@@ -126,7 +149,7 @@ h2 {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    color: white;
+    color: var(--white);
     transition: background-color 0.3s;
     display: flex;
     align-items: center;
@@ -134,19 +157,19 @@ h2 {
 }
 
 .fullscreen-btn {
-    background-color: #007bff;
+    background-color: var(--primary-color);
 }
 
 .fullscreen-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-hover);
 }
 
 .download-btn {
-    background-color: #28a745;
+    background-color: var(--success-color);
 }
 
 .download-btn:hover {
-    background-color: #218838;
+    background-color: var(--success-hover);
 }
 
 .download-btn i, .fullscreen-btn i {
@@ -173,8 +196,8 @@ h2 {
 
 .fullscreen-btn {
     padding: 8px 16px;
-    background-color: #95969b;
-    color: white;
+    background-color: var(--neutral-color);
+    color: var(--white);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -182,7 +205,7 @@ h2 {
 }
 
 .fullscreen-btn:hover {
-    background-color: #5f5f61;
+    background-color: var(--neutral-hover);
 }
 
 .preview-panel.fullscreen {
@@ -216,8 +239,8 @@ h2 {
 }
 
 .tab {
-    background: #e4e4e4;
-    border: 1px solid #ddd;
+    background: var(--tab-bg);
+    border: 1px solid var(--border-color);
     border-bottom: none;
     padding: 8px 15px;
     border-radius: 4px 4px 0 0;
@@ -229,8 +252,8 @@ h2 {
 }
 
 .tab.active {
-    background: white;
-    border-bottom: 1px solid white;
+    background: var(--white);
+    border-bottom: 1px solid var(--white);
     margin-bottom: -1px;
 }
 
@@ -247,14 +270,14 @@ h2 {
     padding: 2px;
     cursor: pointer;
     font-size: 12px;
-    color: #666;
+    color: var(--tab-text);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .close-tab:hover {
-    color: #ff4444;
+    color: var(--danger-color);
 }
 
 .add-tab {
@@ -262,14 +285,14 @@ h2 {
     border: none;
     padding: 8px;
     cursor: pointer;
-    color: #666;
+    color: var(--tab-text);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .add-tab:hover {
-    color: #333;
+    color: var(--text-color);
 }
 
 .tab-content {
@@ -300,7 +323,7 @@ h2 {
     resize: none;
     padding: 10px;
     font-family: monospace;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 }
 
@@ -315,7 +338,7 @@ h2 {
 
 /* Fullscreen styles */
 .mermaid-output:fullscreen {
-    background-color: white;
+    background-color: var(--white);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -334,8 +357,8 @@ h2 {
     position: fixed;
     top: 20px;
     right: 20px;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
+    background: var(--fullscreen-text-bg);
+    color: var(--white);
     padding: 10px 20px;
     border-radius: 4px;
     font-size: 14px;
@@ -345,6 +368,6 @@ h2 {
 /* Dark theme support */
 @media (prefers-color-scheme: dark) {
     .mermaid-output:fullscreen {
-        background-color: white; /* Keep background white even in dark mode */
+        background-color: var(--white); /* Keep background white even in dark mode */
     }
 } 
