@@ -322,7 +322,8 @@ h2 {
     min-height: 200px;
     resize: none;
     padding: 10px;
-    font-family: monospace;
+    font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 14px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
 }
