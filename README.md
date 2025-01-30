@@ -2,6 +2,8 @@
 
 A web-based live editor for creating and previewing Mermaid diagrams in real-time. This tool allows you to write Mermaid syntax and instantly see the rendered diagrams.
 
+Try it live at: [https://thilinahewagama.github.io/mermaid-live/](https://thilinahewagama.github.io/mermaid-live/)
+
 ## Features
 
 - 🎨 Real-time diagram preview
